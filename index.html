@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Typeatag</title>
+    <!-- Bootstrap -->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="http://twitter.github.com/bootstrap/assets/js/google-code-prettify/prettify.css" rel="stylesheet">
+    <style type="text/css">
+    		.tag {
+          margin: 5px;   
+    		}
+    		.tag:first-child {
+    			margin-left: 0px;
+    		}
+    		.tag .icon-remove {
+    			margin-left: 5px;
+    		}
+        .tag-wrapper {
+          width: 300px;
+        }  
+    </style>
+  </head>
+  
+  <body onload="prettyPrint()" bgcolor="white">
+    <div class="container">
+        <pre class="row prettyprint linenums languague-javascript">
+          var phonesTypeatag = $('.phones.typeatag').typeatag({
+            'path' : 'phones.json',
+            'min' : 1
+          });
+          $('.phone.add').on('click', function (e) {
+            e.preventDefault();
+            phonesTypeatag.typeatag('select');
+          });
+          
+        </pre>
+        <form>
+        <div class="row control-group tag-wrapper">
+          <label class="control-label" for="phones">Select tags</label>
+          <div class="input-append">
+            <input id="phones" name="phones" class="phones typeatag" type="text" placeholder="Type something about phones…" > 
+            <span class="help-inline">
+              <a class="phone add btn" href="#">Add</a>
+            </span>
+            <span class="help-block"></span> 
+          </div>
+        </div>
+        <div class="row">
+          <button type="submit" class="btn">Submit</button>
+        </div>
+        </form>
+        <pre class="row prettyprint linenums languague-javascript">
+          var geocoder = new google.maps.Geocoder();
+          $('.address.typeatag').typeatag({
+            'queryName' : 'address',
+            'propertyId':'name',
+            'property'  :'name',
+            'getSource' : function (vars, callback) {
+              if (geocoder) {
+                geocoder.geocode(vars, function (results, status) {
+                   if (status == google.maps.GeocoderStatus.OK) {
+                      var data = [];
+                      $.each(results, function(i,v) {
+                        console.log(results);
+                        data.push({
+                          'id':i,
+                          'name':v.formatted_address
+                        });
+                      });
+                      callback(data);
+                   }
+                   else {
+                      console.log("Geocoding failed: " + status);
+                   }
+                });
+              }
+            }
+          });
+        </pre>
+      <form>
+        <div class="row control-group tag-wrapper">
+          <label class="control-label" for="address">Select tags</label>
+          <div class="controls">
+            <input id="address" name="address" class="address typeatag" type="text" placeholder="Type something about address…" >
+          </div>
+        </div>
+        <div class="row">
+          <button type="submit" class="btn">Submit</button>
+        </div>
+  		</form>
+
+    </div> <!-- /container -->
+    <script src="http://maps.google.com/maps/api/js?sensor=false&language=en"></script>
+    <script type="text/javascript" src="http://yandex.st/jquery/1.8.2/jquery.js"></script>
+    <script type="text/javascript" src="http://twitter.github.com/bootstrap/assets/js/google-code-prettify/prettify.js"></script>
+    <script src="bootstrap/js/bootstrap-typeahead.js"></script>
+    <script src="js/bootstrap-typeatag.js"></script>
+		<script type="text/javascript">
+		  var geocoder = new google.maps.Geocoder();
+		  var phonesTypeatag = $('.phones.typeatag').typeatag({
+        'path' : 'phones.json',
+        'min' : 1
+      });
+      $('.address.typeatag').typeatag({
+        'queryName' : 'address',
+        'propertyId':'name',
+        'property'  :'name',
+        'getSource' : function (vars, callback) {
+          if (geocoder) {
+            geocoder.geocode(vars, function (results, status) {
+               if (status == google.maps.GeocoderStatus.OK) {
+                  var data = [];
+                  $.each(results, function(i,v) {
+                    console.log(results);
+                    data.push({
+                      'id':i,
+                      'name':v.formatted_address
+                    });
+                  });
+                  callback(data);
+               }
+               else {
+                  console.log("Geocoding failed: " + status);
+               }
+            });
+          }
+        }
+      });
+      $('.phone.add').on('click', function (e) {
+        e.preventDefault();
+        phonesTypeatag.typeatag('select');
+      });
+		  $('form').submit(function (e) {
+		  	e.preventDefault();
+		  	alert($(this).serialize());
+		  });
+		  
+		</script>
+  </body>
+</html>
